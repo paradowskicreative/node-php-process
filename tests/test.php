@@ -1,6 +1,8 @@
 <?php
 
-include './NodePhpProcess.php';
+include './src/NodePhpProcess.php';
+
+use pinguinio\NodePhpProcess;
 
 $process = new NodePhpProcess();
 $process
@@ -10,7 +12,7 @@ $process
 	])
 	->run('test')
 	->output($output);
-var_dump($output);
+
 if($output == 'Passed') {
 	echo 'Passed!';
 }

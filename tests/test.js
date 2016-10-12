@@ -1,6 +1,6 @@
 
 
-const NodePhpProcess = require('../NodePhpProcess');
+const NodePhpProcess = require('../src/NodePhpProcess');
 
 new NodePhpProcess((data) => {
 	if(data.some == 'data') {
