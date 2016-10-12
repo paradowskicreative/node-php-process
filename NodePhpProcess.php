@@ -3,7 +3,7 @@
 // Node PHP Process
 //
 
-// namespace pinguinio;
+namespace pinguinio;
 
 class NodePhpProcess 
 {
