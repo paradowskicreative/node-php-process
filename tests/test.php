@@ -10,7 +10,7 @@ $process
 	->content([
 		'some' => 'data'
 	])
-	->run('test')
+	->run('test.js')
 	->output($output);
 
 if($output == 'Passed') {

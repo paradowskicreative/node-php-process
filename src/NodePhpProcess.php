@@ -49,16 +49,16 @@ class NodePhpProcess
 			throw new Exception('NodeProcess->run: no script_name provided');
 		}
 
-		$command = "node {$this->script_path}/{$script_name}.js";
+		$command = "node {$this->script_path}/{$script_name}";
 		$process = proc_open($command, [['pipe', 'r'], ['pipe', 'w']], $pipes);
-		$in = $pipes[0];
-		$out = $pipes[1];
+		$read = $pipes[0];
+		$write = $pipes[1];
 
-		$this->fwrite_stream($in, $this->content, $this->buffer_length);
-		fclose($in);
+		$this->fwrite_stream($read, $this->content, $this->buffer_length);
+		fclose($read);
 
-		$output = stream_get_contents($out);
-		fclose($out);
+		$output = stream_get_contents($write);
+		fclose($write);
 
 		proc_close($process);
 
