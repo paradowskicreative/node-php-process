@@ -2,7 +2,7 @@
 
 include './src/NodePhpProcess.php';
 
-use pinguinio\NodePhpProcess;
+use contentasaurus\NodePhpProcess;
 
 $process = new NodePhpProcess();
 $process
