@@ -11,7 +11,8 @@ function NodePhpProcess(handler) {
 			this.handle = handler;
 		}
 		else {
-			throw new Error('No handler defined');
+			this.handle(new Error('No handler defined'));
+			return;
 		}
 
 		process.stdin.on('data', this.onData);
@@ -24,7 +25,7 @@ function NodePhpProcess(handler) {
 
 	this.onEnd = () => {
 		this.data = JSON.parse(this.data);
-		this.handle(this.data);
+		this.handle(null, this.data);
 	};
 
 	this.init();
