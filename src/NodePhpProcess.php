@@ -49,7 +49,7 @@ class NodePhpProcess
 			throw new Exception('NodeProcess->run: no script_name provided');
 		}
 
-		$command = "node {$this->script_path}/{$script_name}";
+		$command = "node {$this->script_path}/{$script_name} 2>{$this->script_path}/{$script_name}.error.log";
 		$process = proc_open($command, [['pipe', 'r'], ['pipe', 'w']], $pipes);
 		$read = $pipes[0];
 		$write = $pipes[1];

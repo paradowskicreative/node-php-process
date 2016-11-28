@@ -2,7 +2,9 @@
 
 const NodePhpProcess = require('../src/NodePhpProcess');
 
-new NodePhpProcess((data) => {
+new NodePhpProcess((err, data) => {
+	if(err) return;
+
 	if(data.some == 'data') {
 		process.stdout.write('Passed');
 	}
