@@ -12,6 +12,7 @@ class NodePhpProcess
 	private $command = '';
 	private $script_path = __DIR__;
 	private $output = null;
+	private $script_name = '';
 
 	public function buffer_length($value) 
 	{
@@ -48,7 +49,7 @@ class NodePhpProcess
 		if(!$script_name) {
 			throw new Exception('NodeProcess->run: no script_name provided');
 		}
-
+		$this->script_name = $script_name;
 		$command = "node {$this->script_path}/{$script_name} 2>{$this->script_path}/{$script_name}.error.log";
 		$process = proc_open($command, [['pipe', 'r'], ['pipe', 'w']], $pipes);
 		$read = $pipes[0];
@@ -70,6 +71,12 @@ class NodePhpProcess
 	public function output(&$output) 
 	{
 		$output = $this->output;
+		return $this;
+	}
+
+	public function errors(&$errors) 
+	{
+		$errors = file_get_contents("{$this->script_path}/{$this->script_name}.error.log");
 		return $this;
 	}
 

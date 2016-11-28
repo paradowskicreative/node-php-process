@@ -4,6 +4,8 @@ include './src/NodePhpProcess.php';
 
 use contentasaurus\NodePhpProcess;
 
+$log_dir = __DIR__.'/test.js.error.log';
+
 $process = new NodePhpProcess();
 $process
 	->script_path(__DIR__)
@@ -19,3 +21,5 @@ if($output == 'Passed') {
 else {
 	echo 'Failed!';
 }
+
+unlink($log_dir);

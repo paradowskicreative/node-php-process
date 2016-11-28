@@ -13,11 +13,10 @@ $process
 		'some' => 'data'
 	])
 	->run('error_test.js')
+	->errors($errors)
 	->output($output);
 
-$contents = file_get_contents($log_dir);
-
-if($contents) {
+if($errors) {
 	echo 'Passed!';
 }
 else {
