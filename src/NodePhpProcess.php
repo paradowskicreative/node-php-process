@@ -41,6 +41,7 @@ class NodePhpProcess
 	public function content($content = []) 
 	{
 		$this->content = json_encode($content);
+		// var_dump($this->content);
 		return $this;
 	}
 

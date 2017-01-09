@@ -1,14 +1,15 @@
 
+const RequestProcessor = require('../src/RequestProcessor')
 
-const NodePhpProcess = require('../src/NodePhpProcess');
-
-new NodePhpProcess((err, data) => {
-	if(err) return;
-
+RequestProcessor()
+.then((data) => {
 	if(data.some == 'data') {
-		process.stdout.write('Passed');
+		process.stdout.write('Passed')
 	}
 	else {
-		process.stdout.write('Failed');
+		process.stdout.write('Failed')
 	}
-});
+})
+.catch((err) => {
+	process.stderr.write(err)
+})
