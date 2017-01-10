@@ -41,6 +41,11 @@ class NodePhpProcess
 	public function content($content = []) 
 	{
 		$this->content = json_encode($content);
+
+		if(!$this->content) {
+			$this->content = $content;
+		}
+
 		return $this;
 	}
 
@@ -50,20 +55,36 @@ class NodePhpProcess
 			throw new Exception('NodeProcess->run: no script_name provided');
 		}
 		$this->script_name = $script_name;
-		$command = "node {$this->script_path}/{$script_name} 2>{$this->script_path}/{$script_name}.error.log";
-		$process = proc_open($command, [['pipe', 'r'], ['pipe', 'w']], $pipes);
-		$read = $pipes[0];
-		$write = $pipes[1];
+		$command = "node {$this->script_path}/{$script_name}";
+		// $command = "node {$this->script_path}/{$script_name} 2>";
+		// $command = "node {$this->script_path}/{$script_name} 2>{$this->script_path}/{$script_name}.error.log";
+		$process = proc_open(
+			$command, 
+			[
+				['pipe', 'r'], 
+				['pipe', 'w'], 
+				['pipe', 'w']
+			], 
+			$pipes
+		);
 
-		$this->fwrite_stream($read, $this->content, $this->buffer_length);
-		fclose($read);
+		$stdin = $pipes[0];
+		$stdout = $pipes[1];
+		$stderr = $pipes[2];
 
-		$output = stream_get_contents($write);
-		fclose($write);
+		$this->fwrite_stream($stdin, $this->content, $this->buffer_length);
+		fclose($stdin);
+
+		$output = stream_get_contents($stdout);
+		fclose($stdout);
+
+		$stderroutput = stream_get_contents($stderr);
+		fclose($stderr);
 
 		proc_close($process);
 
 		$this->output = $output;
+		$this->errors = $stderroutput;
 
 		return $this;
 	}
@@ -76,7 +97,7 @@ class NodePhpProcess
 
 	public function errors(&$errors) 
 	{
-		$errors = file_get_contents("{$this->script_path}/{$this->script_name}.error.log");
+		$errors = $this->errors;
 		return $this;
 	}
 
