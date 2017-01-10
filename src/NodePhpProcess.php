@@ -3,7 +3,7 @@
 // Node PHP Process
 //
 
-// namespace pinguinio;
+namespace contentasaurus;
 
 class NodePhpProcess 
 {
@@ -12,6 +12,7 @@ class NodePhpProcess
 	private $command = '';
 	private $script_path = __DIR__;
 	private $output = null;
+	private $script_name = '';
 
 	public function buffer_length($value) 
 	{
@@ -40,6 +41,11 @@ class NodePhpProcess
 	public function content($content = []) 
 	{
 		$this->content = json_encode($content);
+
+		if(!$this->content) {
+			$this->content = $content;
+		}
+
 		return $this;
 	}
 
@@ -48,21 +54,37 @@ class NodePhpProcess
 		if(!$script_name) {
 			throw new Exception('NodeProcess->run: no script_name provided');
 		}
+		$this->script_name = $script_name;
+		$command = "node {$this->script_path}/{$script_name}";
+		// $command = "node {$this->script_path}/{$script_name} 2>";
+		// $command = "node {$this->script_path}/{$script_name} 2>{$this->script_path}/{$script_name}.error.log";
+		$process = proc_open(
+			$command, 
+			[
+				['pipe', 'r'], 
+				['pipe', 'w'], 
+				['pipe', 'w']
+			], 
+			$pipes
+		);
 
-		$command = "node {$this->script_path}/{$script_name}.js";
-		$process = proc_open($command, [['pipe', 'r'], ['pipe', 'w']], $pipes);
-		$in = $pipes[0];
-		$out = $pipes[1];
+		$stdin = $pipes[0];
+		$stdout = $pipes[1];
+		$stderr = $pipes[2];
 
-		$this->fwrite_stream($in, $this->content, $this->buffer_length);
-		fclose($in);
+		$this->fwrite_stream($stdin, $this->content, $this->buffer_length);
+		fclose($stdin);
 
-		$output = stream_get_contents($out);
-		fclose($out);
+		$output = stream_get_contents($stdout);
+		fclose($stdout);
+
+		$stderroutput = stream_get_contents($stderr);
+		fclose($stderr);
 
 		proc_close($process);
 
 		$this->output = $output;
+		$this->errors = $stderroutput;
 
 		return $this;
 	}
@@ -70,6 +92,12 @@ class NodePhpProcess
 	public function output(&$output) 
 	{
 		$output = $this->output;
+		return $this;
+	}
+
+	public function errors(&$errors) 
+	{
+		$errors = $this->errors;
 		return $this;
 	}
 

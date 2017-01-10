@@ -1,5 +1,5 @@
 {
-    "name": "pinguinio/node-php-process",
+    "name": "contentasaurus/node-php-process",
     "description": "Provides a standard for handing off processing to node and having node respond with its results.",
     "license": "MIT",
     "authors": [
@@ -8,5 +8,10 @@
             "email": "jwood@paradowski.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4":{
+            "contentasaurus\\": "src/"
+        }
+    }
 }
