@@ -3,6 +3,7 @@ const Promise = require('bluebird')
 const assert = require('assert')
 const fs = require('fs-extra')
 const childProcess = require('child_process')
+const expect = require('chai').expect
 
 const fsStat = Promise.promisify(fs.stat)
 const exec = (...args) => {
@@ -19,37 +20,38 @@ const exec = (...args) => {
 	})
 }
 
+
 describe('RequestProcessor', () => {
-	// let requestProcessor
-
-	// beforeEach(() => {s
-	// 	// requestProcessor = require('../src/RequestProcessor')
-	// })
-
-	// it('is', () => {
-	// 	fsStat('test/simple.php')
-	// 	.then(stats => {
-	// 		console.log('no error')
-	// 	})
-	// 	.catch(err => {
-	// 		console.log('error')
-	// 	})
-	// 	assert(true)
-	// })
-	// it('is a function', () => {
-	// 	assert(typeof requestProcessor === 'function')
-	// })
-
-	it('test', done => {
-		exec('php -c test -f test/simple.php')
+	it('sends JSON from simple.php to simple.json, then back to simple.php', done => {
+		exec(`php -c test -f test/simple.php`)
 		.then(stdout => {
-			// throw Error('test')
-			// stdout.write('test')
-			console.log(stdout)
+			let obj = JSON.parse(stdout)
+
+			expect(obj)
+				.to.have.property('test')
+				.with.valueOf('json')
+
 			done()
+
 		})
 		.catch((err, stderr) => {
-			done(err)
+			if(!stderr) stderr = ''
+			done(`\n\r\t${err}\n\r\t${stderr}`)
+		})
+	})
+
+	it('throws errors to errors.php when they happen in errors.js', done => {
+		exec(`php -c test -f test/errors.php`)
+		.then(stdout => {
+			assert(false)
+			done()
+
+		})
+		.catch((err, stderr) => {
+			if(!stderr) stderr = ''
+
+			expect(err+stderr).to.contain.string('\/\\/\\/\\/\\/\\/\\/')
+			done()
 		})
 	})
 })

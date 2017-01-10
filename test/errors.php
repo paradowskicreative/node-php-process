@@ -10,8 +10,14 @@ $process
 	->content([
 		'test' => 'json'
 	])
-	->run('simple.js')
-	->output($output);
+	->run('errors.js')
+	->output($output)
+	->errors($errors);
 
+// exit(var_dump($errors));
+if(!empty($errors)) {
+	trigger_error($errors, E_USER_ERROR);
+	exit();
+}
 
-die($output);
+exit($output);
