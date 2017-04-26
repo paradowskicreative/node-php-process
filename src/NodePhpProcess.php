@@ -40,7 +40,6 @@ class NodePhpProcess
 
 	public function content($content = []) 
 	{
-		$this->validate_content($content);
 		$this->content = json_encode($content);
 
 		if(!$this->content) {
@@ -48,17 +47,6 @@ class NodePhpProcess
 		}
 
 		return $this;
-	}
-
-	private function validate_content($content) 
-	{
-		foreach($content as $key => $value) {
-			$item = json_encode($value);
-
-			if(!$item) {
-				trigger_error('Component "'.$key.'" was not able to be encoded.', E_USER_ERROR);
-			}
-		}
 	}
 
 	public function run($script_name = false) 
