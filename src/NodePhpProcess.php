@@ -72,7 +72,8 @@ class NodePhpProcess
 		$stdout = $pipes[1];
 		$stderr = $pipes[2];
 
-		$this->fwrite_stream($stdin, $this->content, $this->buffer_length);
+		// $this->fwrite_stream($stdin, $this->content, $this->buffer_length);
+		fwrite($stdin, $this->content);
 		fclose($stdin);
 
 		$output = stream_get_contents($stdout);
