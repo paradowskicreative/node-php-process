@@ -3,8 +3,6 @@
 // Request Processer
 //
 
-const Promise = require('bluebird')
-
 let data = ''
 
 function RequestProcesser() {
