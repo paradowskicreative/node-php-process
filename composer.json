@@ -1,5 +1,5 @@
 {
-    "name": "contentasaurus/node-php-process",
+    "name": "paradowskicreative/node-php-process",
     "description": "Provides a standard for handing off processing to node and having node respond with its results.",
     "license": "MIT",
     "authors": [
